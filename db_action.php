@@ -232,9 +232,10 @@ class Action
       }
 
   }
+  /*联表*/
   function union_table(){
     $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017/xxdb");
-     $command = new MongoDB\Driver\Command([#总的付费用户
+    $command = new MongoDB\Driver\Command([
               'aggregate' =>'vpn_user',
 
                 'pipeline' => [
