@@ -232,6 +232,31 @@ class Action
       }
 
   }
+  function union_table(){
+    $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017/xxdb");
+     $command = new MongoDB\Driver\Command([#总的付费用户
+              'aggregate' =>'vpn_user',
+
+                'pipeline' => [
+
+                  ['$lookup' => [
+                    'from'=>'buyinfo',
+                    'localField'=>"username",
+                    'foreignField'=>"user",
+                    'as'=>'list'
+                  ]],
+
+
+              ],
+
+              'cursor' => new stdClass,
+            ]);
+    $cursor = $manager->executeCommand('xxdb', $command);
+          foreach ($cursor as $key => $value) {
+              $list[]=json_decode(json_encode($value),true);
+      }
+      return $list;
+    }
 
 
 
