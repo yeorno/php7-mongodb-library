@@ -258,5 +258,37 @@ class Action
               $list[]=json_decode(json_encode($value),true);
       }
         return $list;
+    /*由$key分组，统计$count的总和*/
+     public function group_sum($db,$key,$count,$where=[]){
+
+      $pre=$this->pre;
+
+      $manager=$this->manager;
+      if (empty($where)) {
+        $command = new MongoDB\Driver\Command([
+          'aggregate' => $db,
+          'pipeline' => [
+              
+              ['$group' => ['_id' =>'$'.$key, 'sum' => ['$sum' =>'$'.$count]]],
+          ],
+          'cursor' => new stdClass,
+        ]);
+      }else{
+        $command = new MongoDB\Driver\Command([
+          'aggregate' => $db,
+          'pipeline' => [
+              [ '$match' => $where],
+              ['$group' => ['_id' =>'$'.$key, 'sum' => ['$sum' =>'$'.$count]]],
+          ],
+          'cursor' => new stdClass,
+        ]);
+      }
+      $cursor = $manager->executeCommand('xxdb', $command);
+      foreach ($cursor as $key => $value) {
+          $list[]=json_decode(json_encode($value),true);
+      }
+
+      return $list;
+  }
 }
 
