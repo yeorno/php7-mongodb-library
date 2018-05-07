@@ -233,35 +233,30 @@ class Action
 
   }
   /*联表*/
-  function union_table(){
-    $manager = new MongoDB\Driver\Manager("mongodb://localhost:27017/xxdb");
+  function union_table($localtable,$foreigntable,$localField,$foreignField,$as){
+    $pre=$this->pre;
+     $manager=$this->manager;
     $command = new MongoDB\Driver\Command([
-              'aggregate' =>'vpn_user',
-
-                'pipeline' => [
-
-                  ['$lookup' => [
-                    'from'=>'buyinfo',
-                    'localField'=>"username",
-                    'foreignField'=>"user",
-                    'as'=>'list'
-                  ]],
+              'aggregate' =>$localtable,
+              	
+              	'pipeline' => [
+    	           
+    	            ['$lookup' => [
+    	            	'from'=>$foreigntable,
+    	            	'localField'=>$localField,
+    	            	'foreignField'=>$foreignField,
+    	            	'as'=>$as
+    	            ]],
 
 
               ],
 
               'cursor' => new stdClass,
             ]);
-    $cursor = $manager->executeCommand('xxdb', $command);
+          $cursor = $manager->executeCommand($pre, $command);
           foreach ($cursor as $key => $value) {
               $list[]=json_decode(json_encode($value),true);
       }
-      return $list;
-    }
-
-
-
-
-
+        return $list;
 }
 
