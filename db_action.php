@@ -290,5 +290,8 @@ class Action
 
       return $list;
   }
+  public function test(){
+  	echo 'hello world';
+  }
 }
 
